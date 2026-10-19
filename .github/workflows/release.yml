@@ -1,0 +1,116 @@
+# ==============================================================================
+# PDF Studio — Otomatik Sürüm Yayınlama İş Akışı (Automated Release Workflow)
+# ==============================================================================
+# TR: Bu iş akışı, 'v*' ile başlayan bir Git etiketi (örn. v1.0.0) gönderildiğinde
+#     veya GitHub arayüzünden manuel tetiklendiğinde Windows ortamında PyInstaller
+#     ile bağımsız .exe ve SHA-256 özetini üretip GitHub Releases'e yükler.
+#
+# EN: This workflow automatically builds a standalone Windows .exe and SHA-256
+#     checksum using PyInstaller on windows-latest, triggered on tag push (v*)
+#     or manual workflow_dispatch, then publishes them to GitHub Releases.
+# ==============================================================================
+
+name: Release PDF Studio Windows Exe
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build & Release Windows Executable
+    runs-on: windows-latest
+
+    steps:
+      # 1. Depoyu Klonla (Checkout Repository)
+      - name: Depoyu Klonla (Checkout Code)
+        uses: actions/checkout@v4
+
+      # 2. Python Ortamını Kur (Setup Python with Pip Cache)
+      - name: Python 3.11 Kur (Setup Python)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # 3. Bağımlılıkları ve PyInstaller'ı Yükle (Install Dependencies)
+      - name: Bağımlılıkları ve PyInstaller'ı Yükle (Install Dependencies)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      # 4. PyInstaller ile Windows Exe Derle (Build Executable)
+      - name: PyInstaller ile Exe Derle (Build with PyInstaller)
+        run: |
+          pyinstaller --noconfirm --clean --onefile --windowed `
+            --name "PDF-Studio" `
+            --icon "assets/icon.ico" `
+            --version-file version_info.txt `
+            --collect-all customtkinter `
+            --add-data "assets;assets" `
+            goruntu_pdf.py
+
+      # 5. Dağıtım Dosyalarını ve SHA-256 Özetini Hazırla (Prepare Artifacts & Checksum)
+      - name: Dağıtım Dosyalarını ve SHA-256 Özetini Hazırla (Prepare Artifacts & Checksum)
+        id: prepare_artifacts
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          if (-not $tag -or $tag -eq "") { $tag = "v1.0.0" }
+          $cleanTag = $tag -replace '^refs/tags/', ''
+          $exeName = "PDF-Studio-$cleanTag-Windows.exe"
+
+          if (-not (Test-Path "dist\PDF-Studio.exe")) {
+            Write-Error "dist\PDF-Studio.exe dosyası bulunamadı!"
+            exit 1
+          }
+
+          Write-Host "Yeniden adlandırılıyor: dist\PDF-Studio.exe -> dist\$exeName"
+          Move-Item -Path "dist\PDF-Studio.exe" -Destination "dist\$exeName"
+
+          # SHA-256 Hash Hesapla
+          $hash = (Get-FileHash -Path "dist\$exeName" -Algorithm SHA256).Hash.ToLower()
+          "$hash  $exeName" | Out-File -FilePath "dist\$exeName.sha256" -Encoding ascii
+
+          Write-Host "Başarılı: dist\$exeName"
+          Write-Host "SHA-256 Özeti: $hash"
+
+      # 6. GitHub Release Oluştur ve Dosyaları Yükle (Publish GitHub Release)
+      - name: GitHub Release Yayınla (Publish GitHub Release)
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/PDF-Studio-*-Windows.exe
+            dist/PDF-Studio-*-Windows.exe.sha256
+          generate_release_notes: true
+          body: |
+            ## 🚀 Hızlı Başlangıç / Quick Start
+
+            ### 🇹🇷 Türkçe
+            1. Aşağıdaki **Assets** (Varlıklar) listesinden `PDF-Studio-...-Windows.exe` dosyasını indirin.
+            2. İndirilen dosyaya çift tıklayarak çalıştırın. Python veya herhangi bir ek kurulum gerekmez.
+            3. *(İsteğe bağlı)* Dosya bütünlüğünü doğrulamak için PowerShell'de çalıştırın:
+               ```powershell
+               certutil -hashfile "PDF-Studio-...-Windows.exe" SHA256
+               ```
+               Çıkan hash değerini `.sha256` dosyası ile karşılaştırın.
+
+            > **Not:** Windows SmartScreen "Bilinmeyen Yayıncı" uyarısı verirse, **Ek Bilgi** -> **Yine de Çalıştır** seçeneğine tıklayın.
+
+            ---
+
+            ### 🇬🇧 English
+            1. Download `PDF-Studio-...-Windows.exe` from the **Assets** section below.
+            2. Double-click the downloaded file to run. No Python or extra runtime installation required!
+            3. *(Optional)* Verify file integrity using PowerShell:
+               ```powershell
+               certutil -hashfile "PDF-Studio-...-Windows.exe" SHA256
+               ```
+               Compare the resulting hash with the provided `.sha256` file.
+
+            > **Note:** If Windows SmartScreen displays "Unknown Publisher", click **More info** -> **Run anyway**.

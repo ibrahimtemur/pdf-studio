@@ -1,0 +1,22 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Windows batch files must retain CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Shell scripts retain LF
+*.sh text eol=lf
+
+# Python source files
+*.py text eol=lf
+*.txt text
+*.md text
+
+# Binary assets
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.exe binary
