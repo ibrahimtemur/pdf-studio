@@ -19,7 +19,7 @@
 
 <p align="center"><sub>(Python veya herhangi bir kurulum gerektirmez — İndirin ve çift tıklayın!)</sub></p>
 
-[English Documentation](README.md) • [Hızlı Başlangıç](#-hızlı-başlangıç) • [Özellikler](#-özellikler) • [SSS](#-sıkça-sorulan-sorular-sss) • [Geliştiriciler](#%EF%B8%8F-geliştiriciler-için)
+[<img src="https://flagcdn.com/16x12/gb.png" width="16" height="12" alt="GB" valign="middle" /> English](README.md) • [Hızlı Başlangıç](#-hızlı-başlangıç) • [Özellikler](#-özellikler) • [SSS](#-sıkça-sorulan-sorular-sss) • [Geliştiriciler](#%EF%B8%8F-geliştiriciler-için)
 
 </div>
 

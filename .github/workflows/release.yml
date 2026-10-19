@@ -91,7 +91,7 @@ jobs:
           body: |
             ## 🚀 Hızlı Başlangıç / Quick Start
 
-            ### 🇹🇷 Türkçe
+            ### <img src="https://flagcdn.com/20x15/tr.png" width="20" height="15" alt="TR" valign="middle" /> Türkçe
             1. Aşağıdaki **Assets** (Varlıklar) listesinden `PDF-Studio-...-Windows.exe` dosyasını indirin.
             2. İndirilen dosyaya çift tıklayarak çalıştırın. Python veya herhangi bir ek kurulum gerekmez.
             3. *(İsteğe bağlı)* Dosya bütünlüğünü doğrulamak için PowerShell'de çalıştırın:
@@ -104,7 +104,7 @@ jobs:
 
             ---
 
-            ### 🇬🇧 English
+            ### <img src="https://flagcdn.com/20x15/gb.png" width="20" height="15" alt="GB" valign="middle" /> English
             1. Download `PDF-Studio-...-Windows.exe` from the **Assets** section below.
             2. Double-click the downloaded file to run. No Python or extra runtime installation required!
             3. *(Optional)* Verify file integrity using PowerShell:

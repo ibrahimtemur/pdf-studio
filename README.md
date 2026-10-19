@@ -19,7 +19,7 @@
 
 <p align="center"><sub>(No Python or external runtime installation required — Just download and double-click!)</sub></p>
 
-[Türkçe Dokümantasyon](README.tr.md) • [Quick Start](#-quick-start) • [Features](#-features) • [FAQ](#-frequently-asked-questions-faq) • [Developers](#%EF%B8%8F-for-developers)
+[<img src="https://flagcdn.com/16x12/tr.png" width="16" height="12" alt="TR" valign="middle" /> Türkçe](README.tr.md) • [Quick Start](#-quick-start) • [Features](#-features) • [FAQ](#-frequently-asked-questions-faq) • [Developers](#%EF%B8%8F-for-developers)
 
 </div>
 
